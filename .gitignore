@@ -1,0 +1,7 @@
+dist/
+*.db
+*.db-wal
+*.db-shm
+media/
+LOCK
+.DS_Store

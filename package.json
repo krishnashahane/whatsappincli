@@ -1,0 +1,16 @@
+{
+  "name": "whatsappincli",
+  "private": true,
+  "packageManager": "pnpm@10.23.0",
+  "scripts": {
+    "whatsappincli": "bash -lc 'pnpm -s build >/dev/null && exec ./dist/whatsappincli \"$@\"' _",
+    "build": "mkdir -p dist && CGO_CFLAGS=\"${CGO_CFLAGS:+$CGO_CFLAGS }-Wno-error=missing-braces\" go build -tags sqlite_fts5 -o dist/whatsappincli ./cmd/whatsappincli",
+    "start": "pnpm -s build && ./dist/whatsappincli",
+    "test": "pnpm -s test:go && pnpm -s test:fts",
+    "test:go": "go test ./...",
+    "test:fts": "go test -tags sqlite_fts5 ./...",
+    "lint": "go vet ./...",
+    "format": "gofmt -w .",
+    "format:check": "bash -lc 'out=$(gofmt -l .); if [ -n \"$out\" ]; then echo \"$out\"; exit 1; fi'"
+  }
+}
