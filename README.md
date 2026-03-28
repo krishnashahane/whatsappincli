@@ -1,4 +1,4 @@
-# whatsappincli
+# <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="18" align="center"/> whatsappincli
 
 A WhatsApp client that runs entirely in your terminal. Sync messages locally, search them offline with full-text search, send messages, manage groups and contacts — all from the command line.
 
