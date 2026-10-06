@@ -3,7 +3,6 @@ package wa
 import (
 	"context"
 	"fmt"
-	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -60,10 +59,6 @@ func (c *Client) DownloadMediaToFile(ctx context.Context, directPath string, enc
 		}
 	}()
 
-	length := -1
-	if fileLength > 0 && fileLength < math.MaxInt32 {
-		length = int(fileLength)
-	}
 
 	allowNoHash := len(fileHash) == 0
 	if err := cli.DownloadMediaWithPathToFile(ctx, directPath, encFileHash, fileHash, mediaKey, mt, mmsType, allowNoHash, tmpFile); err != nil {
