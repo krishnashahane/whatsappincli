@@ -1,7 +1,6 @@
 package main
 
 import (
-
 	"context"
 	"mime"
 	"net/http"
@@ -10,12 +9,12 @@ import (
 	"strings"
 	"time"
 
+	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
 	"whatsappincli/app"
 	"whatsappincli/store"
 	"whatsappincli/wa"
-	waProto "go.mau.fi/whatsmeow/binary/proto"
 )
 
 func sendFile(ctx context.Context, a interface {
