@@ -45,8 +45,11 @@ func newGroupsInfoCmd(flags *rootFlags) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if info != nil {
-				_ = persistGroupInfo(a.DB(), info)
+			if info == nil {
+				return fmt.Errorf("WhatsApp returned no group information")
+			}
+			if err := persistGroupInfo(a.DB(), info); err != nil {
+				return err
 			}
 
 			if flags.asJSON {
