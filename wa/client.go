@@ -50,6 +50,9 @@ func (c *Client) init() error {
 	if err != nil {
 		return fmt.Errorf("open whatsmeow store: %w", err)
 	}
+	if err := os.Chmod(c.opts.StorePath, 0600); err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("secure WhatsApp session store: %w", err)
+	}
 
 	deviceStore, err := container.GetFirstDevice(ctx)
 	if err != nil {

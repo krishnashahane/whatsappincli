@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"whatsappincli/internal/app"
-	"whatsappincli/internal/store"
-	"whatsappincli/internal/wa"
+	"whatsappincli/app"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"

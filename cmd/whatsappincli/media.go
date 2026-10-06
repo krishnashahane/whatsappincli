@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
+	"whatsappincli/out"
 )
 
 func newMediaCmd(flags *rootFlags) *cobra.Command {

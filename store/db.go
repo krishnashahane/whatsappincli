@@ -28,6 +28,10 @@ func Open(path string) (*DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open sqlite: %w", err)
 	}
+	if err := os.Chmod(path, 0600); err != nil && !os.IsNotExist(err) {
+		_ = db.Close()
+		return nil, fmt.Errorf("secure sqlite database: %w", err)
+	}
 
 	s := &DB{path: path, sql: db}
 	if err := s.init(); err != nil {

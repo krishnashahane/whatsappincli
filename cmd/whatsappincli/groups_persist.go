@@ -1,7 +1,7 @@
 package main
 
 import (
-	"whatsappincli/internal/store"
+	"whatsappincli/store"
 	"go.mau.fi/whatsmeow/types"
 )
 

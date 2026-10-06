@@ -2,13 +2,12 @@ module whatsappincli
 
 go 1.26.0
 
-toolchain go1.27.1
-
 require (
-	github.com/mattn/go-sqlite3 v1.14.52
+	github.com/mattn/go-sqlite3 v1.14.49
 	github.com/mdp/qrterminal/v3 v3.2.1
 	github.com/spf13/cobra v1.10.2
 	go.mau.fi/whatsmeow v0.0.0-20261006124319-9399289b022b
+	golang.org/x/term v0.46.0
 	google.golang.org/protobuf v1.36.12
 )
 

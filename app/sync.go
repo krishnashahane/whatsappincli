@@ -105,6 +105,9 @@ func (a *App) Sync(ctx context.Context, opts SyncOptions) (SyncResult, error) {
 				fmt.Fprintf(os.Stderr, "\rSynced %d messages...", messagesStored.Load())
 			}
 		case *events.HistorySync:
+			if v == nil || v.Data == nil {
+				return
+			}
 			fmt.Fprintf(os.Stderr, "\nProcessing history sync (%d conversations)...\n", len(v.Data.Conversations))
 			for _, conv := range v.Data.Conversations {
 				lastEvent.Store(time.Now().UTC().UnixNano())

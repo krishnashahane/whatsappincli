@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	appPkg "whatsappincli/internal/app"
-	"whatsappincli/internal/out"
+	appPkg "whatsappincli/app"
+	"whatsappincli/out"
 )
 
 func newSyncCmd(flags *rootFlags) *cobra.Command {

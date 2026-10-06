@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
-	"whatsappincli/internal/wa"
+	"whatsappincli/out"
+	"whatsappincli/wa"
 	"go.mau.fi/whatsmeow/types"
 )
 

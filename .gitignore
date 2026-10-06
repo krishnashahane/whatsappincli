@@ -1,0 +1,13 @@
+dist/*
+!dist/.gitkeep
+
+# Local WhatsApp data
+.whatsappincli/
+*.db
+*.db-wal
+*.db-shm
+
+# Local/editor files
+.DS_Store
+.vscode/
+.idea/

@@ -67,6 +67,9 @@ func New(opts Options) (*App, error) {
 	if err := os.MkdirAll(opts.StoreDir, 0700); err != nil {
 		return nil, fmt.Errorf("create store dir: %w", err)
 	}
+	if err := os.Chmod(opts.StoreDir, 0700); err != nil {
+		return nil, fmt.Errorf("secure store dir: %w", err)
+	}
 
 	indexPath := filepath.Join(opts.StoreDir, "whatsappincli.db")
 

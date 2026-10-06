@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
+	"whatsappincli/out"
 )
 
 func newGroupsRefreshCmd(flags *rootFlags) *cobra.Command {

@@ -28,6 +28,15 @@ type UpsertMessageParams struct {
 }
 
 func (d *DB) UpsertMessage(p UpsertMessageParams) error {
+	if p.ChatJID == "" || p.MsgID == "" {
+		return fmt.Errorf("chat JID and message ID are required")
+	}
+	fileLength := uint64(0)
+	if p.FileLength > uint64(^uint64(0)>>1) {
+		fileLength = uint64(^uint64(0) >> 1)
+	} else {
+		fileLength = p.FileLength
+	}
 	_, err := d.sql.Exec(`
 		INSERT INTO messages(
 			chat_jid, chat_name, msg_id, sender_jid, sender_name, ts, from_me, text, display_text,
@@ -53,7 +62,7 @@ func (d *DB) UpsertMessage(p UpsertMessageParams) error {
 			file_length=CASE WHEN excluded.file_length>0 THEN excluded.file_length ELSE messages.file_length END
 	`, p.ChatJID, nullIfEmpty(p.ChatName), p.MsgID, nullIfEmpty(p.SenderJID), nullIfEmpty(p.SenderName), unix(p.Timestamp), boolToInt(p.FromMe), nullIfEmpty(p.Text), nullIfEmpty(p.DisplayText),
 		nullIfEmpty(p.MediaType), nullIfEmpty(p.MediaCaption), nullIfEmpty(p.Filename), nullIfEmpty(p.MimeType), nullIfEmpty(p.DirectPath),
-		p.MediaKey, p.FileSHA256, p.FileEncSHA256, int64(p.FileLength),
+		p.MediaKey, p.FileSHA256, p.FileEncSHA256, int64(fileLength),
 	)
 	return err
 }
