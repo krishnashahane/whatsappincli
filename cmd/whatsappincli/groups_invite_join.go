@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
 	"go.mau.fi/whatsmeow/types"
+	"whatsappincli/out"
 )
 
 func newGroupsInviteCmd(flags *rootFlags) *cobra.Command {

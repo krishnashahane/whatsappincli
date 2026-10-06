@@ -1,149 +1,255 @@
-# <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="18" align="center"/> whatsappincli
+# whatsappincli
 
-A WhatsApp client that runs entirely in your terminal. Sync messages locally, search them offline with full-text search, send messages, manage groups and contacts — all from the command line.
+A terminal-first WhatsApp client built in Go with local SQLite storage, offline search, message/media sending, contact and group management, and history sync.
 
-## Features
+> Use only with a WhatsApp account you are authorized to link and operate. This project uses the open-source [WhatsMeow](https://github.com/tulir/whatsmeow) library for the WhatsApp Web multi-device protocol.
 
-- **QR-based authentication** — scan once from your phone, stays logged in
-- **Local message sync** — messages stored in SQLite, accessible offline
-- **Full-text search** — FTS5-powered instant message search across all chats
-- **Send text & files** — send messages and media from your terminal
-- **Contact management** — view contacts, set local aliases and tags
-- **Group management** — list, inspect, rename, invite, join/leave groups
-- **History backfill** — request older messages from your phone (best-effort)
-- **Media download** — download images, videos, documents on demand
-- **JSON output** — pipe-friendly `--json` flag for scripting
+## What it does
+
+- QR-code authentication and persistent linked-device sessions
+- Local message, chat, contact, and group storage
+- SQLite FTS5 message search with a LIKE fallback
+- Send text messages and common media/document types
+- Download received media on demand
+- Search contacts and maintain local aliases/tags
+- Inspect, rename, join, leave, and manage groups
+- Best-effort on-demand history backfill
+- Human-readable output or machine-readable JSON
+- Single-writer locking to prevent concurrent session/store use
 
 ## Requirements
 
-- Go 1.23+ (for building from source)
-- A WhatsApp account with an active phone
+- Go 1.26 or newer
+- CGO-enabled build environment
+- An active WhatsApp account with a phone capable of linking a companion device
 
-## Install
+On macOS, install Xcode Command Line Tools. On Linux, install a C compiler such as GCC or Clang.
+
+## Build
+
+Clone the repository and build with the Makefile:
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/krishnashahane/whatsappincli.git
 cd whatsappincli
+
+go mod tidy
 make build
 ```
 
-Or with Go directly:
+The binary is written to `dist/whatsappincli`.
+
+Direct build:
 
 ```bash
-go build -tags sqlite_fts5 -o whatsappincli ./cmd/whatsappincli
+CGO_ENABLED=1 go build -tags sqlite_fts5 -trimpath -o dist/whatsappincli ./cmd/whatsappincli
 ```
 
-To install system-wide:
+## First run
+
+Authenticate and bootstrap the local store:
 
 ```bash
-make install
+./dist/whatsappincli auth
 ```
 
-## Quick Start
+WhatsApp will display a QR code in the terminal. On your phone, open **Linked Devices** and link the device.
 
-### 1. Authenticate
+For continuous synchronization:
 
 ```bash
-./whatsappincli auth
+./dist/whatsappincli sync --follow
 ```
 
-This shows a QR code in your terminal. Scan it with WhatsApp on your phone (Settings > Linked Devices > Link a Device). After pairing, it automatically starts syncing your messages.
-
-### 2. Sync messages
+Check the installation and local state:
 
 ```bash
-# One-time sync
-./whatsappincli sync --once
-
-# Keep running and sync continuously
-./whatsappincli sync --follow
+./dist/whatsappincli doctor
+./dist/whatsappincli version
 ```
 
-### 3. Search messages
+## Messages
+
+List recent messages:
 
 ```bash
-./whatsappincli messages search "meeting tomorrow"
-./whatsappincli messages search "project" --chat 1234567890@s.whatsapp.net --limit 20
+./dist/whatsappincli messages list --limit 50
 ```
 
-### 4. Send a message
+Search locally:
 
 ```bash
-./whatsappincli send text --to 1234567890 --message "Hello from the terminal!"
-./whatsappincli send file --to 1234567890 --file ./photo.jpg --caption "Check this out"
+./dist/whatsappincli messages search "meeting tomorrow"
+./dist/whatsappincli messages search "project" --chat 1234567890@s.whatsapp.net --limit 20
 ```
 
-## All Commands
+Inspect one message or its surrounding context:
 
-| Command | Description |
-|---------|-------------|
-| `auth` | Authenticate via QR code and bootstrap initial sync |
-| `auth status` | Check authentication status |
-| `auth logout` | Log out and clear session |
-| `sync` | Sync messages (non-interactive, no QR) |
-| `messages list` | List messages with filters |
-| `messages search <query>` | Full-text search across messages |
-| `messages show` | Show a specific message |
-| `messages context` | Show messages around a specific message |
-| `send text` | Send a text message |
-| `send file` | Send a file/image/video/document |
-| `contacts search <query>` | Search contacts |
-| `contacts show` | Show contact details |
-| `contacts refresh` | Refresh contacts from WhatsApp |
-| `contacts alias set/rm` | Set or remove a local alias |
-| `contacts tags add/rm` | Add or remove tags on contacts |
-| `chats list` | List all chats |
-| `chats show` | Show chat details |
-| `groups list` | List joined groups |
-| `groups info` | Show group details |
-| `groups rename` | Rename a group |
-| `groups refresh` | Refresh group list from WhatsApp |
-| `groups participants add/remove/promote/demote` | Manage group members |
-| `groups invite link get/revoke` | Get or revoke invite link |
-| `groups join` | Join a group via invite code |
-| `groups leave` | Leave a group |
-| `history backfill` | Request older messages from phone |
-| `media download` | Download media from messages |
-| `doctor` | Run diagnostics on store/auth/search |
-| `version` | Print version |
+```bash
+./dist/whatsappincli messages show --chat 1234567890@s.whatsapp.net --id MESSAGE_ID
+./dist/whatsappincli messages context --chat 1234567890@s.whatsapp.net --id MESSAGE_ID --before 5 --after 5
+```
 
-## Global Flags
+## Sending
+
+Send text:
+
+```bash
+./dist/whatsappincli send text \
+  --to 1234567890 \
+  --message "Hello from the terminal"
+```
+
+Send a file:
+
+```bash
+./dist/whatsappincli send file \
+  --to 1234567890 \
+  --file ./photo.jpg \
+  --caption "Check this out"
+```
+
+The recipient can be a phone number or a full WhatsApp JID such as `1234567890@s.whatsapp.net`.
+
+## Media
+
+Download media stored in the local message index:
+
+```bash
+./dist/whatsappincli media download \
+  --chat 1234567890@s.whatsapp.net \
+  --id MESSAGE_ID
+```
+
+Choose a destination file or directory with `--output`.
+
+## Contacts and chats
+
+```bash
+./dist/whatsappincli contacts search "alice"
+./dist/whatsappincli contacts show --jid 1234567890@s.whatsapp.net
+./dist/whatsappincli contacts refresh
+
+./dist/whatsappincli contacts alias set --jid 1234567890@s.whatsapp.net --alias "Alice"
+./dist/whatsappincli contacts alias rm --jid 1234567890@s.whatsapp.net
+
+./dist/whatsappincli contacts tags add --jid 1234567890@s.whatsapp.net --tag work
+./dist/whatsappincli contacts tags rm --jid 1234567890@s.whatsapp.net --tag work
+
+./dist/whatsappincli chats list
+./dist/whatsappincli chats show --jid 1234567890@s.whatsapp.net
+```
+
+## Groups
+
+Refresh and list groups:
+
+```bash
+./dist/whatsappincli groups refresh
+./dist/whatsappincli groups list
+```
+
+Manage group information and participants:
+
+```bash
+./dist/whatsappincli groups info --jid GROUP_JID
+./dist/whatsappincli groups rename --jid GROUP_JID --name "New name"
+
+./dist/whatsappincli groups participants add --jid GROUP_JID --user 1234567890
+./dist/whatsappincli groups participants remove --jid GROUP_JID --user 1234567890
+./dist/whatsappincli groups participants promote --jid GROUP_JID --user 1234567890
+./dist/whatsappincli groups participants demote --jid GROUP_JID --user 1234567890
+```
+
+Invite links:
+
+```bash
+./dist/whatsappincli groups invite link get --jid GROUP_JID
+./dist/whatsappincli groups invite link revoke --jid GROUP_JID
+./dist/whatsappincli groups join --code INVITE_CODE
+./dist/whatsappincli groups leave --jid GROUP_JID
+```
+
+## History backfill
+
+History backfill depends on data already present in the local database:
+
+```bash
+./dist/whatsappincli history backfill \
+  --chat 1234567890@s.whatsapp.net \
+  --count 50 \
+  --requests 1
+```
+
+It is best-effort because availability and behavior of on-demand history sync depend on WhatsApp and the linked devices.
+
+## Global options
 
 ```
 --store DIR       Store directory (default: ~/.whatsappincli)
---json            Output JSON instead of human-readable text
---timeout 5m      Command timeout for non-sync commands
+--json            Output JSON
+--timeout 5m      Timeout for non-following commands
 ```
 
-## How It Works
+JSON mode is intended for scripts:
 
-1. **Authentication**: `whatsappincli auth` connects to WhatsApp Web servers and shows a QR code. Your phone links this as a companion device.
+```bash
+./dist/whatsappincli --json chats list
+./dist/whatsappincli --json messages search "release" --limit 10
+```
 
-2. **Message storage**: Messages are stored in a local SQLite database at `~/.whatsappincli/whatsappincli.db`. The WhatsApp session lives in `~/.whatsappincli/session.db`.
+## Data and privacy
 
-3. **Search**: Uses SQLite FTS5 for fast full-text search. Falls back to LIKE queries if FTS5 is not available (slower but still works).
-
-4. **Sync**: Captures messages via WhatsApp Web protocol event handlers — both real-time messages and history sync batches.
-
-5. **Locking**: Only one instance can access the store at a time (file lock prevents session conflicts that cause "device replaced" errors).
-
-## Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `WHATSAPPINCLI_DEVICE_LABEL` | Custom device label shown in WhatsApp linked devices |
-| `WHATSAPPINCLI_DEVICE_PLATFORM` | Platform type (e.g., `CHROME`, `FIREFOX`, `SAFARI`) |
-
-## Data Storage
-
-All data is stored in `~/.whatsappincli/` by default:
+By default, whatsappincli stores data under:
 
 ```
 ~/.whatsappincli/
-  session.db         # WhatsApp session (encryption keys, device identity)
-  whatsappincli.db   # Messages, chats, contacts, groups (+ FTS index)
-  media/             # Downloaded media files
-  LOCK               # Prevents concurrent access
+├── session.db         # WhatsApp linked-device session
+├── whatsappincli.db   # local message/contact/group index
+├── media/             # downloaded media
+└── LOCK               # single-writer lock
+```
+
+The store directory is created with owner-only permissions. Session and index databases are treated as private local data; back them up carefully and do not commit them to source control.
+
+Logging is intentionally kept low-noise. QR codes and diagnostics are written to the terminal, while JSON results are written to stdout so they can be piped safely.
+
+## Device identity
+
+Optional environment variables:
+
+```bash
+export WHATSAPPINCLI_DEVICE_LABEL="whatsappincli"
+export WHATSAPPINCLI_DEVICE_PLATFORM="CHROME"
+```
+
+The platform value is mapped to the WhatsMeow device platform enum. Unknown values fall back to the default platform.
+
+## Development
+
+Run the complete local checks:
+
+```bash
+go mod tidy
+make test
+make lint
+make build
+```
+
+The GitHub Actions workflow runs formatting, module consistency, unit tests with and without FTS5, `go vet`, a release-style build, and a CLI smoke test.
+
+## Project layout
+
+```
+app/          application and synchronization logic
+cmd/          CLI commands
+config/       default configuration
+lock/         single-writer process lock
+out/          JSON output helpers
+pathutil/     safe filename/path helpers
+store/        SQLite schema and persistence
+wa/           WhatsMeow integration
+docs/         protocol and release notes
 ```
 
 ## License

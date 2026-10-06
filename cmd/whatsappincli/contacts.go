@@ -8,7 +8,7 @@ import (
 	"text/tabwriter"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
+	"whatsappincli/out"
 )
 
 func newContactsCmd(flags *rootFlags) *cobra.Command {

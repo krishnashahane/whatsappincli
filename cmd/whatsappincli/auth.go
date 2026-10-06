@@ -10,8 +10,8 @@ import (
 
 	"github.com/mdp/qrterminal/v3"
 	"github.com/spf13/cobra"
-	appPkg "whatsappincli/internal/app"
-	"whatsappincli/internal/out"
+	appPkg "whatsappincli/app"
+	"whatsappincli/out"
 )
 
 func newAuthCmd(flags *rootFlags) *cobra.Command {

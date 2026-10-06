@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"whatsappincli/internal/store"
+	"whatsappincli/store"
 )
 
 func TestDownloadMediaJobMarksDownloaded(t *testing.T) {

@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
-	"whatsappincli/internal/store"
+	"whatsappincli/out"
+	"whatsappincli/store"
 )
 
 func newMessagesCmd(flags *rootFlags) *cobra.Command {

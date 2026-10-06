@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
-	"whatsappincli/internal/store"
-	"whatsappincli/internal/wa"
+	"whatsappincli/out"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 )
 
 func newSendCmd(flags *rootFlags) *cobra.Command {

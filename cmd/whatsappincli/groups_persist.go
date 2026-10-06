@@ -1,8 +1,8 @@
 package main
 
 import (
-	"whatsappincli/internal/store"
 	"go.mau.fi/whatsmeow/types"
+	"whatsappincli/store"
 )
 
 func persistGroupInfo(db *store.DB, info *types.GroupInfo) error {

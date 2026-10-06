@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
-	"whatsappincli/internal/wa"
+	"whatsappincli/out"
+	"whatsappincli/wa"
 )
 
 func newSendFileCmd(flags *rootFlags) *cobra.Command {

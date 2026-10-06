@@ -50,6 +50,9 @@ func (c *Client) init() error {
 	if err != nil {
 		return fmt.Errorf("open whatsmeow store: %w", err)
 	}
+	if err := os.Chmod(c.opts.StorePath, 0600); err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("secure WhatsApp session store: %w", err)
+	}
 
 	deviceStore, err := container.GetFirstDevice(ctx)
 	if err != nil {
@@ -109,7 +112,10 @@ func (c *Client) Connect(ctx context.Context, opts ConnectOptions) error {
 
 	var qrChan <-chan whatsmeow.QRChannelItem
 	if !authed {
-		ch, _ := cli.GetQRChannel(ctx)
+		ch, err := cli.GetQRChannel(ctx)
+		if err != nil {
+			return fmt.Errorf("get QR channel: %w", err)
+		}
 		qrChan = ch
 	}
 

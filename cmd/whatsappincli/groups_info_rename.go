@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
 	"go.mau.fi/whatsmeow/types"
+	"whatsappincli/out"
 )
 
 func newGroupsInfoCmd(flags *rootFlags) *cobra.Command {
@@ -45,8 +45,11 @@ func newGroupsInfoCmd(flags *rootFlags) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if info != nil {
-				_ = persistGroupInfo(a.DB(), info)
+			if info == nil {
+				return fmt.Errorf("WhatsApp returned no group information")
+			}
+			if err := persistGroupInfo(a.DB(), info); err != nil {
+				return err
 			}
 
 			if flags.asJSON {

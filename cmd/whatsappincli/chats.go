@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/out"
+	"whatsappincli/out"
 )
 
 func newChatsCmd(flags *rootFlags) *cobra.Command {

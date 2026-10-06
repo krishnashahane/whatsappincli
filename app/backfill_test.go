@@ -5,7 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"whatsappincli/internal/store"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/proto/waCommon"
 	"go.mau.fi/whatsmeow/proto/waHistorySync"
@@ -13,6 +12,7 @@ import (
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 	"google.golang.org/protobuf/proto"
+	"whatsappincli/store"
 )
 
 func TestBackfillHistoryAddsOlderMessages(t *testing.T) {

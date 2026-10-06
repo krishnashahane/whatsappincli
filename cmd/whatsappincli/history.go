@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/app"
-	"whatsappincli/internal/out"
+	"whatsappincli/app"
+	"whatsappincli/out"
 )
 
 func newHistoryCmd(flags *rootFlags) *cobra.Command {

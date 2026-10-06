@@ -7,12 +7,12 @@ import (
 	"path/filepath"
 	"time"
 
-	"whatsappincli/internal/store"
-	"whatsappincli/internal/wa"
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 )
 
 type WAClient interface {
@@ -66,6 +66,9 @@ func New(opts Options) (*App, error) {
 	}
 	if err := os.MkdirAll(opts.StoreDir, 0700); err != nil {
 		return nil, fmt.Errorf("create store dir: %w", err)
+	}
+	if err := os.Chmod(opts.StoreDir, 0700); err != nil {
+		return nil, fmt.Errorf("secure store dir: %w", err)
 	}
 
 	indexPath := filepath.Join(opts.StoreDir, "whatsappincli.db")

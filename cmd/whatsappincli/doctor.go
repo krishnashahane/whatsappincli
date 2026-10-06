@@ -9,9 +9,9 @@ import (
 	"text/tabwriter"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/config"
-	"whatsappincli/internal/lock"
-	"whatsappincli/internal/out"
+	"whatsappincli/config"
+	"whatsappincli/lock"
+	"whatsappincli/out"
 )
 
 func newDoctorCmd(flags *rootFlags) *cobra.Command {

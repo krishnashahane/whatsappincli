@@ -138,16 +138,31 @@ func (a *App) BackfillHistory(ctx context.Context, opts BackfillOptions) (Backfi
 				requestsSent++
 				fmt.Fprintf(os.Stderr, "Requesting %d older messages for %s...\n", opts.Count, chatStr)
 				if _, err := a.wa.RequestHistorySyncOnDemand(ctx, reqInfo, opts.Count); err != nil {
+					mu.Lock()
+					if waitCh == ch {
+						waitCh = nil
+					}
+					mu.Unlock()
 					return err
 				}
 
 				var resp onDemandResponse
 				select {
 				case <-ctx.Done():
+					mu.Lock()
+					if waitCh == ch {
+						waitCh = nil
+					}
+					mu.Unlock()
 					return ctx.Err()
 				case resp = <-ch:
 					responsesSeen++
 				case <-time.After(opts.WaitPerRequest):
+					mu.Lock()
+					if waitCh == ch {
+						waitCh = nil
+					}
+					mu.Unlock()
 					return fmt.Errorf("timed out waiting for on-demand history sync response")
 				}
 

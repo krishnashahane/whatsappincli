@@ -8,10 +8,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"whatsappincli/internal/store"
-	"whatsappincli/internal/wa"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 )
 
 type SyncMode string
@@ -68,13 +68,8 @@ func (a *App) Sync(ctx context.Context, opts SyncOptions) (SyncResult, error) {
 			select {
 			case mediaJobs <- mediaJob{chatJID: chatJID, msgID: msgID}:
 			default:
-				// Avoid blocking the event handler.
-				go func() {
-					select {
-					case mediaJobs <- mediaJob{chatJID: chatJID, msgID: msgID}:
-					case <-ctx.Done():
-					}
-				}()
+				// Keep the event handler bounded under heavy media traffic.
+				fmt.Fprintf(os.Stderr, "\nMedia queue full; skipping download for %s/%s.\n", chatJID, msgID)
 			}
 		}
 	}
@@ -105,6 +100,9 @@ func (a *App) Sync(ctx context.Context, opts SyncOptions) (SyncResult, error) {
 				fmt.Fprintf(os.Stderr, "\rSynced %d messages...", messagesStored.Load())
 			}
 		case *events.HistorySync:
+			if v == nil || v.Data == nil {
+				return
+			}
 			fmt.Fprintf(os.Stderr, "\nProcessing history sync (%d conversations)...\n", len(v.Data.Conversations))
 			for _, conv := range v.Data.Conversations {
 				lastEvent.Store(time.Now().UTC().UnixNano())

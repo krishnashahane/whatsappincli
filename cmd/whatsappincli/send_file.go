@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"whatsappincli/internal/app"
-	"whatsappincli/internal/store"
-	"whatsappincli/internal/wa"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
+	"whatsappincli/app"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 )
 
 func sendFile(ctx context.Context, a interface {
