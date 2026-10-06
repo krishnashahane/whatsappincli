@@ -65,7 +65,8 @@ func (c *Client) DownloadMediaToFile(ctx context.Context, directPath string, enc
 		length = int(fileLength)
 	}
 
-	if err := cli.DownloadMediaWithPathToFile(ctx, directPath, encFileHash, fileHash, mediaKey, length, mt, mmsType, tmpFile); err != nil {
+	allowNoHash := len(fileHash) == 0
+	if err := cli.DownloadMediaWithPathToFile(ctx, directPath, encFileHash, fileHash, mediaKey, mt, mmsType, allowNoHash, tmpFile); err != nil {
 		return 0, err
 	}
 	if err := tmpFile.Sync(); err != nil {
