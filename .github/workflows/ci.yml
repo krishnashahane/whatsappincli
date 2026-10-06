@@ -6,44 +6,19 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
           go-version: "1.26.x"
           cache: true
-      - name: Format Go sources
-        shell: bash
-        run: |
-          mapfile -t files < <(git ls-files '*.go')
-          if [ "${#files[@]}" -gt 0 ]; then
-            gofmt -w "${files[@]}"
-          fi
-          if git diff --quiet -- '*.go'; then
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- '*.go'
-          git commit -m "style: format Go files"
-          git push
-      - name: Verify module files
-        shell: bash
-        run: |
-          go mod tidy
-          if git diff --quiet -- go.mod go.sum; then
-            exit 0
-          fi
-          git add -- go.mod go.sum
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "build: refresh Go module checksums"
-          git push
+
       - name: Verify formatting
         shell: bash
         run: |
@@ -53,17 +28,29 @@ jobs:
             printf '%s\n' "$files"
             exit 1
           fi
+
+      - name: Verify modules
+        run: |
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
+          go mod verify
+
       - name: Test
         run: go test ./...
+
       - name: Test with FTS5
         run: go test -tags sqlite_fts5 ./...
+
       - name: Vet
-        run: go vet ./...
+        run: go vet -tags sqlite_fts5 ./...
+
       - name: Vulnerability scan
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@v1.8.0
           govulncheck -tags sqlite_fts5 ./...
+
       - name: Build
         run: CGO_ENABLED=1 go build -tags sqlite_fts5 -trimpath -ldflags="-s -w" -o /tmp/whatsappincli ./cmd/whatsappincli
+
       - name: Smoke test
         run: /tmp/whatsappincli version
