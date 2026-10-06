@@ -69,9 +69,7 @@ func (a *App) Sync(ctx context.Context, opts SyncOptions) (SyncResult, error) {
 			case mediaJobs <- mediaJob{chatJID: chatJID, msgID: msgID}:
 			default:
 				// Keep the event handler bounded under heavy media traffic.
-				fmt.Fprintf(os.Stderr, "
-Media queue full; skipping download for %s/%s.
-", chatJID, msgID)
+				fmt.Fprintf(os.Stderr, "\nMedia queue full; skipping download for %s/%s.\n", chatJID, msgID)
 			}
 		}
 	}
