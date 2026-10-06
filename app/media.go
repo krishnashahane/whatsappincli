@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"whatsappincli/internal/pathutil"
-	"whatsappincli/internal/store"
+	"whatsappincli/pathutil"
+	"whatsappincli/store"
 )
 
 type mediaJob struct {
