@@ -8,8 +8,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"whatsappincli/internal/store"
-	"whatsappincli/internal/wa"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 )
