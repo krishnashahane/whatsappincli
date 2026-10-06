@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"whatsappincli/internal/store"
-	"whatsappincli/internal/wa"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types"
