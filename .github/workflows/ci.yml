@@ -19,6 +19,9 @@ jobs:
           go-version: "1.26.x"
           cache: true
 
+      - name: Debug media formatting
+        run: gofmt -d wa/media.go
+
       - name: Verify formatting
         shell: bash
         run: |
