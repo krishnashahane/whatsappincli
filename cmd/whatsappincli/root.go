@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/internal/app"
-	"whatsappincli/internal/config"
-	"whatsappincli/internal/lock"
-	"whatsappincli/internal/out"
+	"whatsappincli/app"
+	"whatsappincli/config"
+	"whatsappincli/lock"
+	"whatsappincli/out"
 )
 
 var version = "0.5.0"
