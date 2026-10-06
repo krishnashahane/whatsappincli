@@ -1,6 +1,7 @@
 package app
 
 import (
+
 	"context"
 	"fmt"
 	"os"
@@ -8,10 +9,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"whatsappincli/store"
-	"whatsappincli/wa"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
+	"whatsappincli/store"
+	"whatsappincli/wa"
 )
 
 type SyncMode string

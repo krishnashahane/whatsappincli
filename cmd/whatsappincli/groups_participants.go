@@ -1,15 +1,16 @@
 package main
 
 import (
+
 	"context"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
+	"go.mau.fi/whatsmeow/types"
 	"whatsappincli/out"
 	"whatsappincli/wa"
-	"go.mau.fi/whatsmeow/types"
 )
 
 func newGroupsParticipantsCmd(flags *rootFlags) *cobra.Command {

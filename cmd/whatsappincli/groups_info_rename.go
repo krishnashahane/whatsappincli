@@ -1,6 +1,7 @@
 package main
 
 import (
+
 	"context"
 	"fmt"
 	"os"
@@ -8,8 +9,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"whatsappincli/out"
 	"go.mau.fi/whatsmeow/types"
+	"whatsappincli/out"
 )
 
 func newGroupsInfoCmd(flags *rootFlags) *cobra.Command {

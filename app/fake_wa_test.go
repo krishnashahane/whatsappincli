@@ -1,6 +1,7 @@
 package app
 
 import (
+
 	"context"
 	"fmt"
 	"os"
@@ -8,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"whatsappincli/internal/wa"
 	"go.mau.fi/whatsmeow"
-	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
+	"whatsappincli/wa"
+	waProto "go.mau.fi/whatsmeow/binary/proto"
 )
 
 type fakeWA struct {
